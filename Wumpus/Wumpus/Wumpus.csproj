@@ -63,8 +63,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\GameSettings.cs" />
+    <Compile Include="Model\Node.cs" />
+    <Compile Include="Model\Player.cs" />
+    <Compile Include="Model\Position.cs" />
     <Compile Include="Model\WumpusModel.cs" />
-    <Compile Include="Model\WumpusTable.cs" />
+    <Compile Include="ViewModel\WumpusField.cs" />
     <Compile Include="ViewModel\WumpusViewModel.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

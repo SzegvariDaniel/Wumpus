@@ -26,7 +26,16 @@ namespace Wumpus
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
+            GameSettings settings = new GameSettings
+            {
+                TableSize = 6,
+                NumberOfArrows = 6,
+                NumberOfBats = 3,
+                NumberOfPits = 3
+            };
+
             _model = new WumpusModel();
+            _model.NewGame(settings);
 
             _viewModel = new WumpusViewModel(_model);
 
