@@ -11,6 +11,7 @@ namespace Wumpus.Model
         public Boolean Pit { get; set; }
         public Boolean Bats { get; set; }
         public Boolean Wumpus { get; set; }
+        public Boolean Treasure { get; set; }
         public Player Player { get; set; }
 
         public Node()

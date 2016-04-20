@@ -38,6 +38,7 @@ namespace Wumpus
             _model.NewGame(settings);
 
             _viewModel = new WumpusViewModel(_model);
+            _viewModel.NewGame(settings);
 
             _view = new MainWindow();
             _view.DataContext = _viewModel;

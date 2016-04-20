@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wumpus"
         ResizeMode="NoResize"
-        Title="Wumpus" Height="350" Width="525">
+        Title="Wumpus" Height="515" Width="475">
     
     <Grid>
 
@@ -20,14 +20,13 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
 
         <!--Menu-->
         <Menu Grid.Row="0" Grid.ColumnSpan="3" >
             <MenuItem Header="Játék">
                 <MenuItem Header="Új játék" Command="{Binding NewGameOptionsCommand}"/>
-                <MenuItem Header="Útmutató" Command="{Binding GuideCommand}"/>
             </MenuItem>
         </Menu>
 
@@ -40,8 +39,21 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Height="70" Width="70" 
-                            Command="{Binding OnClickCommand}" CommandParameter="{Binding Number}" >
+                    <Button Height="70" Width="70" Command="{Binding ButtonClickCommand}" Content="{Binding Content}" >
+                        <!-- <Canvas>
+                            <Image Height="70" Width="70"
+                                Canvas.Left="-35" Canvas.Top="-35" 
+                                Source="{Binding BaseImage, Converter={StaticResource imageConverter}}" >
+                            </Image>
+                            <Image Height="40" Width="40"
+                                Source="{Binding BatsImage, Converter={StaticResource imageConverter}}" />
+                            <Image Height="70" Width="70"
+                                Source="{Binding PitImage, Converter={StaticResource imageConverter}}" />
+                            <Image Height="70" Width="70"
+                                Source="{Binding TreasureImage, Converter={StaticResource imageConverter}}" />
+                            <Image Height="70" Width="70"
+                                Source="{Binding PlayerImage, Converter={StaticResource imageConverter}}" />
+                        </Canvas> -->
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
@@ -53,5 +65,12 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
+        <!--Status bar-->
+        <StatusBar Grid.Row="5" Grid.ColumnSpan="4" Visibility="{Binding IsGameOn}">
+            <StatusBarItem>
+                <Button Content="Felfed!" Command="{Binding UncoverCommand}" />
+            </StatusBarItem>
+        </StatusBar>
+        
     </Grid>
 </Window>

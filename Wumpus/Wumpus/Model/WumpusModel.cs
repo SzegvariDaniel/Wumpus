@@ -13,7 +13,7 @@ namespace Wumpus.Model
         private Int32 _tableSize;
         private List<Position> _safeNodes;
 
-        public Node[,] Table { get; set; }
+        public Node[,] Table { get { return _table; } }
         public Int32 TableSize { get { return _tableSize; } set { _tableSize = value; } }
         public Player Player { get { return _player; } }
 
@@ -23,9 +23,24 @@ namespace Wumpus.Model
         {
             InitTable(settings);
             InitPlayer(settings);
+            InitTreasure(settings);
             InitBats(settings);
             InitPits(settings);
             InitWumpus(settings);
+        }
+
+        private void InitTreasure(GameSettings settings)
+        {
+            Random random = new Random();
+            Position p;
+
+            do
+            {
+                p = new Position(random.Next() % settings.TableSize, random.Next() % settings.TableSize);
+            } while ( !IsValidDangerPosition(p));
+
+            _table[p.X, p.Y].Treasure = true;
+            _safeNodes.Add(p);
         }
 
         private void InitWumpus(GameSettings settings)
@@ -76,7 +91,8 @@ namespace Wumpus.Model
         private bool IsValidDangerPosition(Position p)
         {
             Node selectedNode = _table[p.X, p.Y];
-            return !selectedNode.Bats && !selectedNode.Pit && !selectedNode.Wumpus && !_safeNodes.Contains(p);
+            return !selectedNode.Bats && !selectedNode.Pit && !selectedNode.Wumpus && 
+                        !selectedNode.Treasure && !_safeNodes.Contains(p);
         }
 
         private void InitPlayer(GameSettings settings)
@@ -93,7 +109,13 @@ namespace Wumpus.Model
             {
                 for (int j = 0; j < settings.TableSize; ++j)
                 {
-                    _table[i, j] = new Node();
+                    _table[i, j] = new Node
+                    {
+                        Bats = false,
+                        Pit = false,
+                        Wumpus = false,
+                        Treasure = false
+                    };
                 }
             }
 

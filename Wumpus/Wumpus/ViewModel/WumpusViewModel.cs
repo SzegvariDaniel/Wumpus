@@ -15,10 +15,13 @@ namespace Wumpus.ViewModel
 
         public ObservableCollection<WumpusField> Fields { get; set; }
         public int TableSize { get { return _model.TableSize; } set { _model.TableSize = value; OnPropertyChanged(); } }
+        public DelegateCommand UncoverCommand { get; set; }
 
         public WumpusViewModel(WumpusModel model)
         {
             _model = model;
+
+            UncoverCommand = new DelegateCommand(p => asda());
         }
 
         public void NewGame(GameSettings settings)
@@ -31,12 +34,37 @@ namespace Wumpus.ViewModel
                     Fields.Add(new WumpusField
                     {
                         X = i,
-                        Y  = j
-                    });
+                        Y  = j,
+                        Number = i * TableSize + j,
+                        ButtonClickCommand = new DelegateCommand(p => asda()),
+                        Content = ""
+                });
                 }
             }
-            OnPropertyChanged("TableSize");
+        }
 
+        private void asda()
+        {
+            for (int i = 0; i < TableSize; ++i)
+            {
+                for (int j = 0; j < TableSize; ++j)
+                {
+                    if(_model.Table[i, j].Bats)
+                        Fields[i * TableSize + j].Content += " Denevér";
+
+                    if (_model.Table[i, j].Pit)
+                        Fields[i * TableSize + j].Content += " Csapda";
+
+                    if (_model.Table[i, j].Wumpus)
+                        Fields[i * TableSize + j].Content += " Wumpus";
+
+                    if (_model.Table[i, j].Treasure)
+                        Fields[i * TableSize + j].Content += " Kincs";
+
+                    if (_model.Table[i, j].Player != null)
+                        Fields[i * TableSize + j].Content += " Játékos";
+                }
+            }
         }
     }
 }
