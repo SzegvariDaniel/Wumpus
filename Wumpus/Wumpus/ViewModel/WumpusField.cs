@@ -1,14 +1,18 @@
-﻿using System;
+﻿using ELTE.Windows.ColorGrid.ViewModel;
+using System;
 
 namespace Wumpus.ViewModel
 {
-    internal class WumpusField
+    internal class WumpusField : ViewModelBase
     {
         private String _baseImage;
         private String _batsImage;
         private String _pitImage;
         private String _wumpusImage;
         private String _playerImage;
+
+        public int X { get; set; }
+        public int Y { get; set; }
 
         public string BaseImage { get { return _baseImage; } set { _baseImage = value; } }
 

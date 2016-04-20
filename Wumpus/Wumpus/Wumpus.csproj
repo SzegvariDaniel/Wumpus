@@ -68,6 +68,8 @@
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\Position.cs" />
     <Compile Include="Model\WumpusModel.cs" />
+    <Compile Include="ViewModel\DelegateCommand.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\WumpusField.cs" />
     <Compile Include="ViewModel\WumpusViewModel.cs" />
     <Compile Include="View\MainWindow.xaml.cs">

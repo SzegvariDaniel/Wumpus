@@ -42,6 +42,8 @@ namespace Wumpus
             _view = new MainWindow();
             _view.DataContext = _viewModel;
             _view.Show();
+
+            Console.WriteLine(_model.TableSize);
         }
     }
 }

@@ -11,10 +11,10 @@ namespace Wumpus.Model
         private Node[,] _table;
         private Player _player;
         private Int32 _tableSize;
-        private List<Position> _freeNodes;
+        private List<Position> _safeNodes;
 
         public Node[,] Table { get; set; }
-        public Int32 TableSize { get { return _tableSize; } }
+        public Int32 TableSize { get { return _tableSize; } set { _tableSize = value; } }
         public Player Player { get { return _player; } }
 
         public WumpusModel() { }
@@ -30,12 +30,31 @@ namespace Wumpus.Model
 
         private void InitWumpus(GameSettings settings)
         {
-            throw new NotImplementedException();
+            Random random = new Random();
+            Position p;
+
+            do
+            {
+                p = new Position(random.Next() % settings.TableSize, random.Next() % settings.TableSize);
+            } while (!IsValidDangerPosition(p));
+
+            _table[p.X, p.Y].Wumpus = true;
         }
 
         private void InitPits(GameSettings settings)
         {
-            throw new NotImplementedException();
+            Random random = new Random();
+            for(int i = 0; i < settings.NumberOfPits; ++i)
+            {
+                Position p;
+
+                do
+                {
+                    p = new Position(random.Next() % settings.TableSize, random.Next() % settings.TableSize);
+                } while (!IsValidDangerPosition(p));
+
+                _table[p.X, p.Y].Pit = true;
+            }
         }
 
         private void InitBats(GameSettings settings)
@@ -48,20 +67,16 @@ namespace Wumpus.Model
                 do
                 {
                     p = new Position(random.Next() % settings.TableSize, random.Next() % settings.TableSize);
-                } while (IsValidBatPosition(p));
+                } while (!IsValidDangerPosition(p));
 
                 _table[p.X, p.Y].Bats = true;
             }
         }
 
-        private bool IsValidBatPosition(Position p)
+        private bool IsValidDangerPosition(Position p)
         {
-            return !IsCorner(p.X, p.Y) && !_table[p.X, p.Y].Bats && _freeNodes.Contains(p);
-        }
-
-        private bool IsCorner(int x, int y)
-        {
-            return x == 0 && (y == 0 || y == TableSize - 1) || x == TableSize - 1 && (y == 0 || y == TableSize - 1);
+            Node selectedNode = _table[p.X, p.Y];
+            return !selectedNode.Bats && !selectedNode.Pit && !selectedNode.Wumpus && !_safeNodes.Contains(p);
         }
 
         private void InitPlayer(GameSettings settings)
@@ -81,6 +96,11 @@ namespace Wumpus.Model
                     _table[i, j] = new Node();
                 }
             }
+
+            _safeNodes = new List<Position>();
+            _safeNodes.Add(new Position(_tableSize - 1, 0));
+            _safeNodes.Add(new Position(_tableSize - 2, 0));
+            _safeNodes.Add(new Position(_tableSize - 1, 1));
         }
     }
 }
