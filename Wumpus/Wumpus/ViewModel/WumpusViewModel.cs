@@ -16,12 +16,20 @@ namespace Wumpus.ViewModel
         public ObservableCollection<WumpusField> Fields { get; set; }
         public int TableSize { get { return _model.TableSize; } set { _model.TableSize = value; OnPropertyChanged(); } }
         public DelegateCommand UncoverCommand { get; set; }
+        public DelegateCommand UpCommand { get; set; }
+        public DelegateCommand DownCommand { get; set; }
+        public DelegateCommand LeftCommand { get; set; }
+        public DelegateCommand RightCommand { get; set; }
 
         public WumpusViewModel(WumpusModel model)
         {
             _model = model;
 
             UncoverCommand = new DelegateCommand(p => asda());
+            UpCommand = new DelegateCommand(p => _model.StepUp());
+            DownCommand = new DelegateCommand(p => _model.StepDown());
+            LeftCommand = new DelegateCommand(p => _model.StepLeft());
+            RightCommand = new DelegateCommand(p => _model.StepRight());
         }
 
         public void NewGame(GameSettings settings)

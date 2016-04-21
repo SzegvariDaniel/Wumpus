@@ -29,6 +29,32 @@ namespace Wumpus.Model
             InitWumpus(settings);
         }
 
+        public void StepUp()
+        {
+            if (Player.Position.X <= 0)
+                return;
+
+            _table[Player.Position.X - 0, Player.Position.Y].Player = _table[Player.Position.X, Player.Position.Y].Player;
+            _table[Player.Position.X, Player.Position.Y].Player = null;
+
+            --Player.Position.X;
+        }
+
+        public void StepDown()
+        {
+
+        }
+
+        public void StepLeft()
+        {
+
+        }
+
+        public void StepRight()
+        {
+
+        }
+
         private void InitTreasure(GameSettings settings)
         {
             Random random = new Random();
@@ -97,7 +123,7 @@ namespace Wumpus.Model
 
         private void InitPlayer(GameSettings settings)
         {
-            _player = new Player(settings.NumberOfArrows);
+            _player = new Player(new Position(settings.TableSize - 1, 0), settings.NumberOfArrows);
             _table[settings.TableSize - 1, 0].Player = Player;
         }
 

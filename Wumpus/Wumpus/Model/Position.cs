@@ -1,6 +1,6 @@
 ﻿namespace Wumpus.Model
 {
-    internal class Position
+    public class Position
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -19,6 +19,11 @@
             Position other = (Position)obj;
 
             return X.Equals(other.X) && Y.Equals(other.Y);
+        }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode();
         }
     }
 }
