@@ -16,6 +16,10 @@ namespace Wumpus.Model
         public Node[,] Table { get { return _table; } }
         public Int32 TableSize { get { return _tableSize; } set { _tableSize = value; } }
         public Player Player { get { return _player; } }
+        public Position WumpusPosition { get; set; }
+        public Position TreasurePosition { get; set; }
+        public List<Position> BatPositions { get; set; }
+        public List<Position> PitPositions { get; set; }
 
         public WumpusModel() { }
 
@@ -66,6 +70,7 @@ namespace Wumpus.Model
             } while ( !IsValidDangerPosition(p));
 
             _table[p.X, p.Y].Treasure = true;
+            TreasurePosition = p;
             _safeNodes.Add(p);
         }
 
@@ -80,10 +85,12 @@ namespace Wumpus.Model
             } while (!IsValidDangerPosition(p));
 
             _table[p.X, p.Y].Wumpus = true;
+            WumpusPosition = p;
         }
 
         private void InitPits(GameSettings settings)
         {
+            PitPositions = new List<Position>();
             Random random = new Random();
             for(int i = 0; i < settings.NumberOfPits; ++i)
             {
@@ -95,11 +102,13 @@ namespace Wumpus.Model
                 } while (!IsValidDangerPosition(p));
 
                 _table[p.X, p.Y].Pit = true;
+                PitPositions.Add(p);
             }
         }
 
         private void InitBats(GameSettings settings)
         {
+            BatPositions = new List<Position>();
             Random random = new Random();
             for(int i = 0; i < settings.NumberOfBats; ++i)
             {
@@ -111,6 +120,7 @@ namespace Wumpus.Model
                 } while (!IsValidDangerPosition(p));
 
                 _table[p.X, p.Y].Bats = true;
+                BatPositions.Add(p);
             }
         }
 
@@ -150,5 +160,6 @@ namespace Wumpus.Model
             _safeNodes.Add(new Position(_tableSize - 2, 0));
             _safeNodes.Add(new Position(_tableSize - 1, 1));
         }
+
     }
 }

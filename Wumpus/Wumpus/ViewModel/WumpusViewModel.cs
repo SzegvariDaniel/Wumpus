@@ -49,6 +49,14 @@ namespace Wumpus.ViewModel
                 });
                 }
             }
+
+            Fields[_model.WumpusPosition.X * TableSize + _model.WumpusPosition.Y].WumpusImage = "wumpus";
+            Fields[_model.TreasurePosition.X * TableSize + _model.TreasurePosition.Y].TreasureImage = "treasure";
+            Fields[_model.Player.Position.X * TableSize + _model.Player.Position.Y].PlayerImage = "player";
+            foreach(Position p in _model.BatPositions)
+                Fields[p.X * TableSize + p.Y].BatsImage = "bats";
+            foreach (Position p in _model.PitPositions)
+                Fields[p.X * + TableSize + p.Y].PitImage = "pit";
         }
 
         private void asda()

@@ -51,21 +51,22 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Height="70" Width="70" Command="{Binding ButtonClickCommand}" Content="{Binding Content}" >
-                        <!-- <Canvas>
+                    <Button Height="70" Width="70" Command="{Binding ButtonClickCommand}" >
+                        <Canvas>
                             <Image Height="70" Width="70"
                                 Canvas.Left="-35" Canvas.Top="-35" 
-                                Source="{Binding BaseImage, Converter={StaticResource imageConverter}}" >
-                            </Image>
-                            <Image Height="40" Width="40"
+                                Source="{Binding BaseImage, Converter={StaticResource imageConverter}}" />
+                            <Image Height="60" Width="60" Canvas.Left="-30" Canvas.Top="-30"
                                 Source="{Binding BatsImage, Converter={StaticResource imageConverter}}" />
-                            <Image Height="70" Width="70"
+                            <Image Height="60" Width="60" Canvas.Left="-30" Canvas.Top="-30"
                                 Source="{Binding PitImage, Converter={StaticResource imageConverter}}" />
-                            <Image Height="70" Width="70"
+                            <Image Height="60" Width="60" Canvas.Left="-30" Canvas.Top="-30" 
                                 Source="{Binding TreasureImage, Converter={StaticResource imageConverter}}" />
-                            <Image Height="70" Width="70"
+                            <Image Height="60" Width="60" Canvas.Left="-30" Canvas.Top="-30" 
+                                Source="{Binding WumpusImage, Converter={StaticResource imageConverter}}" />
+                            <Image Height="60" Width="60" Canvas.Left="-30" Canvas.Top="-30"
                                 Source="{Binding PlayerImage, Converter={StaticResource imageConverter}}" />
-                        </Canvas> -->
+                        </Canvas>
                     </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
