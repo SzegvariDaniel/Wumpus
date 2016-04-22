@@ -13,10 +13,22 @@
     </Window.Resources>
 
     <Window.InputBindings>
+        
         <KeyBinding Command="{Binding UpCommand}" Key="Up"/>
         <KeyBinding Command="{Binding DownCommand}" Key="Down"/>
         <KeyBinding Command="{Binding LeftCommand}" Key="Left"/>
         <KeyBinding Command="{Binding RightCommand}" Key="Right"/>
+        
+<!--
+        <KeyBinding Command="{Binding StepCommand}" CommandParameter="Up" Key="Up" />
+        <KeyBinding Command="{Binding StepCommand}" CommandParameter="Down" Key="Down" />
+        <KeyBinding Command="{Binding StepCommand}" CommandParameter="Left" Key="Left" />
+        <KeyBinding Command="{Binding StepCommand}" CommandParameter="Right" Key="Right" />
+-->
+        <KeyBinding Command="{Binding ShootCommand}" CommandParameter="Up" Modifiers="Control" Key="Up" />
+        <KeyBinding Command="{Binding ShootCommand}" CommandParameter="Down" Modifiers="Control" Key="Down" />
+        <KeyBinding Command="{Binding ShootCommand}" CommandParameter="Left" Modifiers="Control" Key="Left" />
+        <KeyBinding Command="{Binding ShootCommand}" CommandParameter="Right" Modifiers="Control" Key="Right" />
     </Window.InputBindings>
 
     <Grid>

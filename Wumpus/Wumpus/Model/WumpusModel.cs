@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Wumpus.Model
 {
@@ -21,6 +22,10 @@ namespace Wumpus.Model
         public List<Position> BatPositions { get; set; }
         public List<Position> PitPositions { get; set; }
 
+
+        public event EventHandler<EventArgs> OnStep;
+        public event EventHandler<EventArgs> OnGameWon;
+
         public WumpusModel() { }
 
         public void NewGame(GameSettings settings)
@@ -38,25 +43,115 @@ namespace Wumpus.Model
             if (Player.Position.X <= 0)
                 return;
 
-            _table[Player.Position.X - 0, Player.Position.Y].Player = _table[Player.Position.X, Player.Position.Y].Player;
+            _table[Player.Position.X - 1, Player.Position.Y].Player = _table[Player.Position.X, Player.Position.Y].Player;
             _table[Player.Position.X, Player.Position.Y].Player = null;
 
             --Player.Position.X;
+
+            if (OnStep != null)
+                OnStep(this, EventArgs.Empty);
         }
 
         public void StepDown()
         {
+            if (Player.Position.X >= TableSize - 1)
+                return;
 
+            _table[Player.Position.X + 1, Player.Position.Y].Player = _table[Player.Position.X, Player.Position.Y].Player;
+            _table[Player.Position.X, Player.Position.Y].Player = null;
+
+            ++Player.Position.X;
+
+            if (OnStep != null)
+                OnStep(this, EventArgs.Empty);
         }
 
         public void StepLeft()
         {
+            if (Player.Position.Y <= 0)
+                return;
 
+            _table[Player.Position.X, Player.Position.Y - 1].Player = _table[Player.Position.X, Player.Position.Y].Player;
+            _table[Player.Position.X, Player.Position.Y].Player = null;
+
+            --Player.Position.Y;
+
+            if (OnStep != null)
+                OnStep(this, EventArgs.Empty);
         }
 
         public void StepRight()
         {
+            if (Player.Position.Y >= TableSize - 1)
+                return;
 
+            _table[Player.Position.X, Player.Position.Y + 1].Player = _table[Player.Position.X, Player.Position.Y].Player;
+            _table[Player.Position.X, Player.Position.Y].Player = null;
+
+            ++Player.Position.Y;
+
+            if (OnStep != null)
+                OnStep(this, EventArgs.Empty);
+        }
+
+        public void Step(String direction)
+        {
+            Node target = new Node();
+
+            switch (direction)
+            {
+                case "Up":
+                    target = _table[Player.Position.X - 1, Player.Position.Y];
+                    break;
+                case "Down":
+                    target = _table[Player.Position.X + 1, Player.Position.Y];
+                    break;
+                case "Left":
+                    target = _table[Player.Position.X, Player.Position.Y - 1];
+                    break;
+                case "Right":
+                    target = _table[Player.Position.X, Player.Position.Y + 1];
+                    break;
+            }
+  
+            if (OnStep != null)
+                OnStep(this, EventArgs.Empty);
+        }
+
+        public void Shoot(String direction)
+        {
+            if (Player.Arrows <= 0)
+            {
+                MessageBox.Show("Elfogytak a nyilak!", "Figyelmeztetés", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+
+            Node target = new Node();
+            switch(direction)
+            {
+                case "Up":
+                    target = _table[Player.Position.X - 1, Player.Position.Y];
+                    break;
+                case "Down":
+                    target = _table[Player.Position.X + 1, Player.Position.Y];
+                    break;
+                case "Left":
+                    target = _table[Player.Position.X, Player.Position.Y - 1];
+                    break;
+                case "Right":
+                    target = _table[Player.Position.X, Player.Position.Y + 1];
+                    break; 
+            }
+
+            if (target.Wumpus)
+            {
+                
+
+                MessageBox.Show("Wumpus lelőve", "Gratulálok!", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            --Player.Arrows;
+            
         }
 
         private void InitTreasure(GameSettings settings)
