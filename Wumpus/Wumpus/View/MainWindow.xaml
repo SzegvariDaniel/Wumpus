@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wumpus"
-        xmlns:viewModel="clr-namespace:Wumpus.ViewModel"
+        xmlns:viewModel="clr-namespace:Wumpus.ViewModel.Converters"
         ResizeMode="NoResize"
-        Title="Wumpus" Height="515" Width="475">
+        Height="{Binding WindowSize.Height, Mode=TwoWay}" Width="{Binding WindowSize.Width, Mode=TwoWay}"
+        Title="Wumpus">
 
     <Window.Resources>
         <viewModel:ImageConverter x:Key="imageConverter" />
@@ -63,7 +64,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Height="70" Width="70" Command="{Binding ButtonClickCommand}" >
+                    <Button Height="70" Width="70" Background="{Binding BaseColor}" Command="{Binding ButtonClickCommand}" >
                         <Canvas>
                             <Image Height="70" Width="70"
                                 Canvas.Left="-35" Canvas.Top="-35" 
@@ -78,6 +79,13 @@
                                 Source="{Binding WumpusImage, Converter={StaticResource imageConverter}}" />
                             <Image Height="60" Width="60" Canvas.Left="-30" Canvas.Top="-30"
                                 Source="{Binding PlayerImage, Converter={StaticResource imageConverter}}" />
+
+                            <Image Height="30" Width="30" Canvas.Left="0" Canvas.Top="0"
+                                Source="{Binding SmellImage, Converter={StaticResource imageConverter}}" />
+                            <Image Height="30" Width="30" Canvas.Left="-30" Canvas.Top="-30"
+                                Source="{Binding WindImage, Converter={StaticResource imageConverter}}" />
+                            <Image Height="30" Width="30" Canvas.Left="0" Canvas.Top="-30"
+                                Source="{Binding SoundImage, Converter={StaticResource imageConverter}}" />
                         </Canvas>
                     </Button>
                 </DataTemplate>
@@ -94,6 +102,13 @@
         <StatusBar Grid.Row="5" Grid.ColumnSpan="4" Visibility="{Binding IsGameOn}">
             <StatusBarItem>
                 <Button Content="Felfed!" Command="{Binding UncoverCommand}" />
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="Nyilak száma:"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding Arrows}"/>
             </StatusBarItem>
         </StatusBar>
         

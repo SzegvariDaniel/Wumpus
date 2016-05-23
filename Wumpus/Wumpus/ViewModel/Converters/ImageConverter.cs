@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Wumpus.ViewModel
+namespace Wumpus.ViewModel.Converters
 {
     class ImageConverter : IValueConverter
     {

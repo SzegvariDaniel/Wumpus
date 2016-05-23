@@ -11,6 +11,12 @@
             this.Y = y;
         }
 
+        public Position(Position position)
+        {
+            X = position.X;
+            Y = position.Y;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj is Position))

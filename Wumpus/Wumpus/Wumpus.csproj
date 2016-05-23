@@ -56,6 +56,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\WindowSize.cs" />
+    <Compile Include="View\NewGameOptionsWindow.xaml.cs">
+      <DependentUpon>NewGameOptionsWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -68,9 +72,10 @@
     <Compile Include="Model\Node.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\Position.cs" />
+    <Compile Include="Model\WumpusEventArgs.cs" />
     <Compile Include="Model\WumpusModel.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
-    <Compile Include="ViewModel\ImageConverter.cs" />
+    <Compile Include="ViewModel\Converters\ImageConverter.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\WumpusField.cs" />
     <Compile Include="ViewModel\WumpusViewModel.cs" />
@@ -78,6 +83,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\NewGameOptionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

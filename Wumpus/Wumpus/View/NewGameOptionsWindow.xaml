@@ -1,0 +1,55 @@
+﻿<Window x:Class="Wumpus.View.NewGameOptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModel="clr-namespace:Wumpus.ViewModel.Converters"
+        Title="Beállítások" Height="280" Width="340" ResizeMode="NoResize">
+
+    <Window.Resources>
+        
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="110" />
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+
+        <!--Table size-->
+        <Label Grid.Row="1" Grid.Column="1" Content="Tábla mérete:" VerticalAlignment="Center" />
+        <ComboBox Grid.Row="1" Grid.Column="2" Width="40" Height="20" ItemsSource="{Binding TableSizeList}"
+                  SelectedValue="{Binding NewGameSettings.TableSize, Mode=TwoWay}" />
+
+        <!--Bats-->
+        <Label Grid.Row="2" Grid.Column="1" Content="Denevérek száma:" VerticalAlignment="Center" />
+        <ComboBox Grid.Row="2" Grid.Column="2" Width="40" Height="20" ItemsSource="{Binding NumberOfBatsList}"
+                  SelectedValue="{Binding NewGameSettings.NumberOfBats, Mode=TwoWay}" />
+
+        <!--Pits-->
+        <Label Grid.Row="3" Grid.Column="1" Content="Csapdák száma:" VerticalAlignment="Center" />
+        <ComboBox Grid.Row="3" Grid.Column="2" Width="40" Height="20" ItemsSource="{Binding NumberOfPitsList}"
+                  SelectedValue="{Binding NewGameSettings.NumberOfPits, Mode=TwoWay}" />
+
+        <!--Arrows-->
+        <Label Grid.Row="4" Grid.Column="1" Content="Nyilak száma:" VerticalAlignment="Center" />
+        <ComboBox Grid.Row="4" Grid.Column="2" Width="40" Height="20" ItemsSource="{Binding NumberOfArrowsList}"
+                  SelectedValue="{Binding NewGameSettings.NumberOfArrows, Mode=TwoWay}" />
+
+        <!--Start button-->
+        <Button Grid.Row="5" Grid.Column="3" Content="Start!" Width="50" Height="20" Command="{Binding StartNewGameCommand}" 
+                VerticalAlignment="Bottom" />
+
+    </Grid>
+</Window>

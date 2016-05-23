@@ -21,9 +21,16 @@ namespace Wumpus.Model
         public Position TreasurePosition { get; set; }
         public List<Position> BatPositions { get; set; }
         public List<Position> PitPositions { get; set; }
+        public List<Position> SmellPositions { get; set; }
+        public List<Position> WindPositions { get; set; }
+        public List<Position> SoundPositions { get; set; }
+        
+        public bool IsGameOn { get; set; }
+        public bool IsTreasureCollected { get; set; }
+        public bool IsWumpusShot { get; set; }
 
 
-        public event EventHandler<EventArgs> OnStep;
+        public event EventHandler<WumpusEventArgs> OnStep;
         public event EventHandler<EventArgs> OnGameWon;
 
         public WumpusModel() { }
@@ -36,6 +43,10 @@ namespace Wumpus.Model
             InitBats(settings);
             InitPits(settings);
             InitWumpus(settings);
+
+            IsGameOn = true;
+            IsTreasureCollected = false;
+            IsWumpusShot = false;
         }
 
         public void StepUp()
@@ -46,10 +57,98 @@ namespace Wumpus.Model
             _table[Player.Position.X - 1, Player.Position.Y].Player = _table[Player.Position.X, Player.Position.Y].Player;
             _table[Player.Position.X, Player.Position.Y].Player = null;
 
+            Position oldPos = new Position(Player.Position);
+
             --Player.Position.X;
 
+            CheckNearby();
+
             if (OnStep != null)
-                OnStep(this, EventArgs.Empty);
+                OnStep(this, new WumpusEventArgs { OldPosition = oldPos, NewPosition = Player.Position });
+
+            CheckForDangers();
+        }
+
+        private void CheckForDangers()
+        {
+            CheckForWumpus();
+            CheckForBats();
+            CheckForPit();
+            CheckForTreasure();
+        }
+
+        private void CheckForTreasure()
+        {
+            if(TreasurePosition.Equals(Player.Position))
+            {
+                if (IsWumpusShot)
+                {
+                    if (OnGameWon != null)
+                        OnGameWon(this, EventArgs.Empty);
+
+                    IsGameOn = false;
+
+                    MessageBox.Show("Nyertél!", "Gratulálok!", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    if(!IsTreasureCollected)
+                        MessageBox.Show("Kincs megszerezve", "Gratulálok!", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+                IsTreasureCollected = true;
+            }
+        }
+
+        private void CheckForBats()
+        {
+            if (BatPositions.Contains(Player.Position))
+            {
+                Random random = new Random();
+                Position p;
+
+                do
+                {
+                    p = new Position(random.Next() % TableSize, random.Next() % TableSize);
+                } while(BatPositions.Contains(p) || PitPositions.Contains(p) || _table[p.X,p.Y].Wumpus);
+
+                Position oldPos = new Position(Player.Position);
+
+                Player.Position = p;
+
+                if (OnStep != null)
+                    OnStep(this, new WumpusEventArgs { OldPosition = oldPos, NewPosition = Player.Position });
+
+                CheckNearby();
+
+                //MessageBox.Show("A denevérek átdobtak.", "Figyelmeztetés", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void CheckForPit()
+        {
+            if (PitPositions.Contains(Player.Position))
+            {
+                IsGameOn = false;
+
+                if (OnGameWon != null)
+                    OnGameWon(this, EventArgs.Empty);
+
+                MessageBox.Show("Leestél egy lyukba!", "Játék vége", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+        }
+
+        private void CheckForWumpus()
+        {
+            if (Player.Position.Equals(WumpusPosition) && !IsWumpusShot)
+            {
+                IsGameOn = false;
+
+                if (OnGameWon != null)
+                    OnGameWon(this, EventArgs.Empty);
+
+                MessageBox.Show("Megevett a Wumpus!", "Játék vége", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
         }
 
         public void StepDown()
@@ -60,10 +159,16 @@ namespace Wumpus.Model
             _table[Player.Position.X + 1, Player.Position.Y].Player = _table[Player.Position.X, Player.Position.Y].Player;
             _table[Player.Position.X, Player.Position.Y].Player = null;
 
+            Position oldPos = new Position(Player.Position);
+
             ++Player.Position.X;
 
+            CheckNearby();
+
             if (OnStep != null)
-                OnStep(this, EventArgs.Empty);
+                OnStep(this, new WumpusEventArgs { OldPosition = oldPos, NewPosition = Player.Position });
+
+            CheckForDangers();
         }
 
         public void StepLeft()
@@ -73,11 +178,17 @@ namespace Wumpus.Model
 
             _table[Player.Position.X, Player.Position.Y - 1].Player = _table[Player.Position.X, Player.Position.Y].Player;
             _table[Player.Position.X, Player.Position.Y].Player = null;
+            
+            Position oldPos = new Position(Player.Position);
 
             --Player.Position.Y;
 
+            CheckNearby();
+
             if (OnStep != null)
-                OnStep(this, EventArgs.Empty);
+                OnStep(this, new WumpusEventArgs { OldPosition = oldPos, NewPosition = Player.Position });
+
+            CheckForDangers();
         }
 
         public void StepRight()
@@ -88,10 +199,51 @@ namespace Wumpus.Model
             _table[Player.Position.X, Player.Position.Y + 1].Player = _table[Player.Position.X, Player.Position.Y].Player;
             _table[Player.Position.X, Player.Position.Y].Player = null;
 
+            Position oldPos = new Position(Player.Position);
+
             ++Player.Position.Y;
 
+            CheckNearby();
+
             if (OnStep != null)
-                OnStep(this, EventArgs.Empty);
+                OnStep(this, new WumpusEventArgs { OldPosition = oldPos, NewPosition = Player.Position });
+
+            CheckForDangers();
+        }
+
+        private void CheckNearby()
+        {
+            WumpusEventArgs args = new WumpusEventArgs();
+
+            if((Player.Position.X > 0 && _table[Player.Position.X - 1, Player.Position.Y].Pit)
+                || (Player.Position.X <= TableSize - 2 && _table[Player.Position.X + 1, Player.Position.Y].Pit)
+                || (Player.Position.Y > 0 && _table[Player.Position.X, Player.Position.Y - 1].Pit)
+                || (Player.Position.Y <= TableSize - 2 && _table[Player.Position.X, Player.Position.Y + 1].Pit))
+            {
+                WindPositions.Add(Player.Position);
+                args.WindPosition = Player.Position;
+            }
+
+            if ((Player.Position.X > 0 && _table[Player.Position.X - 1, Player.Position.Y].Wumpus)
+                || (Player.Position.X <= TableSize - 2 && _table[Player.Position.X + 1, Player.Position.Y].Wumpus)
+                || (Player.Position.Y > 0 && _table[Player.Position.X, Player.Position.Y - 1].Wumpus)
+                || (Player.Position.Y <= TableSize - 2 && _table[Player.Position.X, Player.Position.Y + 1].Wumpus))
+            {
+                SmellPositions.Add(Player.Position);
+                args.SmellPosition = Player.Position;
+            }
+
+            if ((Player.Position.X > 0 && _table[Player.Position.X - 1, Player.Position.Y].Bats)
+                || (Player.Position.X <= TableSize - 2 && _table[Player.Position.X + 1, Player.Position.Y].Bats)
+                || (Player.Position.Y > 0 && _table[Player.Position.X, Player.Position.Y - 1].Bats)
+                || (Player.Position.Y <= TableSize - 2 && _table[Player.Position.X, Player.Position.Y + 1].Bats))
+            {
+                SoundPositions.Add(Player.Position);
+                args.SoundPosition = Player.Position;
+            }
+
+            if (OnStep != null)
+                OnStep(this, args);
         }
 
         public void Step(String direction)
@@ -114,8 +266,8 @@ namespace Wumpus.Model
                     break;
             }
   
-            if (OnStep != null)
-                OnStep(this, EventArgs.Empty);
+           // if (OnStep != null)
+             //   OnStep(this, EventArgs.Empty);
         }
 
         public void Shoot(String direction)
@@ -145,9 +297,23 @@ namespace Wumpus.Model
 
             if (target.Wumpus)
             {
-                
+                if(IsTreasureCollected)
+                {
+                    if (OnGameWon != null)
+                        OnGameWon(this, EventArgs.Empty);
 
-                MessageBox.Show("Wumpus lelőve", "Gratulálok!", MessageBoxButton.OK, MessageBoxImage.Information);
+                    IsGameOn = false;
+
+                    MessageBox.Show("Nyertél!", "Gratulálok!", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    if(!IsWumpusShot)
+                        MessageBox.Show("Wumpus lelőve", "Gratulálok!", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+
+                IsWumpusShot = true;
+                
             }
 
             --Player.Arrows;
@@ -254,7 +420,10 @@ namespace Wumpus.Model
             _safeNodes.Add(new Position(_tableSize - 1, 0));
             _safeNodes.Add(new Position(_tableSize - 2, 0));
             _safeNodes.Add(new Position(_tableSize - 1, 1));
-        }
 
+            WindPositions = new List<Position>();
+            SmellPositions = new List<Position>();
+            SoundPositions = new List<Position>();
+        }
     }
 }
